@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TX9 - المنصة الشاملة</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #050810;
+    --bg-card: #0c1120;
+    --bg-card2: #111827;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --gold: #ffd700;
+    --danger: #ef4444;
+    --success: #10b981;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --border: #1e293b;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 20px rgba(124,58,237,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text);
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Animated BG ── */
+  .bg-animated {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 20% 20%, #0d1a3a 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, #1a0d2e 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, #050810 0%, #050810 100%);
+  }
+  .bg-animated::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(0,212,255,0.015) 80px, rgba(0,212,255,0.015) 81px),
+                repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(124,58,237,0.015) 80px, rgba(124,58,237,0.015) 81px);
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove { from { transform: translateY(0); } to { transform: translateY(80px); } }
+
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12; z-index: 0; pointer-events: none;
+    animation: orbFloat 12s ease-in-out infinite;
+  }
+  .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -150px; right: -150px; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: -100px; left: -100px; animation-delay: -4s; }
+  .orb-3 { width: 300px; height: 300px; background: var(--accent3); top: 50%; left: 50%; animation-delay: -8s; }
+  @keyframes orbFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(30px,-30px) scale(1.05); }
+    66% { transform: translate(-20px,20px) scale(0.95); }
+  }
+
+  /* ── Layout ── */
+  .container { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── Header ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(5,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    padding: 0 20px;
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white; font-weight: 900;
+    box-shadow: var(--glow);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { box-shadow: 0 0 15px rgba(0,212,255,0.3); }
+    50% { box-shadow: 0 0 30px rgba(0,212,255,0.6), 0 0 60px rgba(124,58,237,0.3); }
+  }
+  .logo-text { font-size: 1.4rem; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .logo-sub { font-size: 0.7rem; color: var(--text-muted); display: block; }
+
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .admin-badge {
+    display: none; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 0.8rem; font-weight: 700; color: white;
+    animation: badgePulse 2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  .admin-badge.show { display: flex; }
+  @keyframes badgePulse { 0%,100%{opacity:1}50%{opacity:0.7} }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.8rem; color: var(--accent); margin-bottom: 24px;
+    animation: fadeInDown 0.8s ease;
+  }
+  .hero-title {
+    font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 900; line-height: 1.1;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-size: 200%; animation: gradShift 4s ease-in-out infinite;
+  }
+  @keyframes gradShift { 0%,100%{background-position:0%} 50%{background-position:100%} }
+  .hero-desc {
+    font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease 0.6s both;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 900; color: var(--accent); }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+
+  /* ── Tabs ── */
+  .tabs-wrapper {
+    position: sticky; top: 70px; z-index: 90;
+    background: rgba(5,8,16,0.9); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border); padding: 0 20px;
+  }
+  .tabs {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none; padding: 12px 0;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 10px;
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-muted); cursor: pointer;
+    font-family: 'Cairo', sans-serif; font-size: 0.95rem; font-weight: 600;
+    transition: all 0.3s ease; white-space: nowrap;
+  }
+  .tab-btn:hover { background: rgba(0,212,255,0.08); color: var(--text); border-color: rgba(0,212,255,0.2); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15));
+    border-color: rgba(0,212,255,0.4);
+    color: var(--accent);
+    box-shadow: 0 0 15px rgba(0,212,255,0.15);
+  }
+  .tab-btn i { font-size: 1rem; }
+
+  /* ── Section ── */
+  .tab-section { display: none; padding: 40px 20px; }
+  .tab-section.active { display: block; animation: sectionIn 0.4s ease; }
+  @keyframes sectionIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 30px; flex-wrap: wrap; gap: 12px;
+  }
+  .section-title {
+    font-size: 1.6rem; font-weight: 900;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title i { color: var(--accent); }
+
+  /* ── Cards ── */
+  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+  .post-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    animation: cardIn 0.4s ease both;
+  }
+  .post-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), var(--glow);
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .post-media { position: relative; overflow: hidden; }
+  .post-media img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.5s ease; }
+  .post-card:hover .post-media img { transform: scale(1.05); }
+  .post-media video { width: 100%; max-height: 300px; display: block; background: #000; }
+
+  .post-type-badge {
+    position: absolute; top: 10px; right: 10px;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 0.72rem; font-weight: 700; color: white;
+    backdrop-filter: blur(10px);
+  }
+  .badge-news { background: rgba(16,185,129,0.8); }
+  .badge-scripts { background: rgba(124,58,237,0.8); }
+  .badge-videos { background: rgba(0,212,255,0.8); }
+  .badge-mods { background: rgba(245,158,11,0.8); }
+
+  .post-body { padding: 18px; }
+  .post-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .post-content { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+  .post-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px; border-top: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--text-muted);
+  }
+  .post-date { display: flex; align-items: center; gap: 5px; }
+
+  .btn-delete {
+    background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+    color: var(--danger); padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+    display: none; align-items: center; gap: 4px;
+    font-family: 'Cairo', sans-serif;
+  }
+  .btn-delete:hover { background: rgba(239,68,68,0.3); }
+  .admin-logged .btn-delete { display: flex; }
+
+  .empty-state {
+    text-align: center; padding: 80px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+  .empty-state p { font-size: 1rem; }
+
+  /* ── Videos Section ── */
+  .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .video-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: all 0.3s ease;
+    animation: cardIn 0.4s ease both;
+  }
+  .video-card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .video-card video { width: 100%; max-height: 240px; display: block; background: #000; }
+  .video-card .post-body { padding: 14px; }
+  .video-title { font-size: 0.95rem; font-weight: 700; }
+  .video-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+  .video-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 10px;
+    font-family: 'Cairo', sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; border: none; transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; box-shadow: 0 4px 15px rgba(0,212,255,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,212,255,0.4); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: rgba(239,68,68,0.15); border: 1px solid var(--danger); color: var(--danger); }
+  .btn-danger:hover { background: var(--danger); color: white; }
+  .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    padding: 20px;
+  }
+  .modal-overlay.show { opacity: 1; visibility: visible; }
+
+  .modal {
+    background: var(--bg-card2);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 20px; width: 100%; max-width: 600px;
+    max-height: 90vh; overflow-y: auto;
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s ease;
+    scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+  }
+  .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 28px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+  .modal-close {
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 1.2rem; transition: color 0.2s;
+    padding: 4px;
+  }
+  .modal-close:hover { color: var(--danger); }
+  .modal-body { padding: 24px 28px; }
+
+  /* ── Form ── */
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+  .form-control {
+    width: 100%; padding: 12px 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 0.9rem;
+    transition: all 0.3s ease; outline: none;
+  }
+  .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+  .form-control::placeholder { color: var(--text-muted); }
+  textarea.form-control { resize: vertical; min-height: 100px; }
+  select.form-control { cursor: pointer; }
+  select.form-control option { background: var(--bg-card2); }
+
+  .file-upload-area {
+    border: 2px dashed var(--border); border-radius: 12px;
+    padding: 30px; text-align: center; cursor: pointer;
+    transition: all 0.3s ease; color: var(--text-muted);
+  }
+  .file-upload-area:hover, .file-upload-area.dragover {
+    border-color: var(--accent); color: var(--accent);
+    background: rgba(0,212,255,0.05);
+  }
+  .file-upload-area i { font-size: 2rem; margin-bottom: 10px; display: block; }
+  .file-upload-area input { display: none; }
+
+  /* ── Password Modal ── */
+  .pass-modal {
+    max-width: 400px;
+  }
+  .pass-modal .modal-body { text-align: center; }
+  .pass-icon { font-size: 3rem; color: var(--accent); margin-bottom: 16px; }
+  .pass-hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+  /* ── Admin Panel ── */
+  .admin-panel-modal { max-width: 700px; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .admin-tab {
+    padding: 8px 16px; border-radius: 8px; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    color: var(--text-muted); font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600;
+    transition: all 0.2s;
+  }
+  .admin-tab.active { background: linear-gradient(135deg,rgba(0,212,255,0.15),rgba(124,58,237,0.15)); border-color: var(--accent); color: var(--accent); }
+
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+
+  /* ── Notification ── */
+  .notif-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+  .notif {
+    background: var(--bg-card2); border-radius: 10px;
+    padding: 12px 20px; font-size: 0.9rem; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+    border-right: 4px solid;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    animation: notifIn 0.4s ease, notifOut 0.4s ease 2.6s both;
+    min-width: 280px;
+  }
+  .notif-success { border-color: var(--success); color: var(--success); }
+  .notif-error { border-color: var(--danger); color: var(--danger); }
+  .notif-info { border-color: var(--accent); color: var(--accent); }
+  @keyframes notifIn { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes notifOut { from{opacity:1} to{opacity:0;transform:translateY(-20px)} }
+
+  /* ── Loading ── */
+  .loading-spinner {
+    display: inline-block; width: 20px; height: 20px;
+    border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Stats counter ── */
+  .stats-bar {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px; margin-bottom: 30px;
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+  }
+  .stat-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+  .stat-item i { font-size: 1.2rem; }
+  .stat-item .num { font-size: 1.4rem; font-weight: 900; }
+  .stat-item .lbl { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-dark); }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 30px 20px; text-align: center;
+    color: var(--text-muted); font-size: 0.85rem;
+    margin-top: 60px;
+  }
+  footer span { color: var(--accent); font-weight: 700; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero { padding: 50px 20px 40px; }
+    .posts-grid { grid-template-columns: 1fr; }
+    .videos-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+    .modal-body { padding: 16px 18px; }
+    .modal-header { padding: 18px 18px 14px; }
+    .tab-btn { padding: 8px 14px; font-size: 0.85rem; }
+  }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); margin: 20px 0; }
+
+  /* ── Video upload progress ── */
+  .upload-progress {
+    height: 4px; background: var(--border); border-radius: 2px; margin-top: 10px; overflow: hidden; display: none;
+  }
+  .upload-progress-bar {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px; transition: width 0.3s; width: 0;
+  }
+
+  /* ── Section Video embed ── */
+  .section-video-wrapper { margin-top: 12px; }
+  .section-video-wrapper video { width: 100%; border-radius: 8px; max-height: 250px; }
+  .section-video-wrapper iframe { width: 100%; height: 220px; border-radius: 8px; border: none; }
+
+  /* ── Image fallback ── */
+  .post-img-placeholder {
+    width: 100%; height: 200px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 2rem;
+  }
+
+  /* ── Glow line ── */
+  .glow-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent3), transparent);
+    margin: 0;
+    animation: gradShift 4s ease-in-out infinite;
+    background-size: 200%;
+  }
+</style>
+</head>
+<body class="" id="bodyRoot">
+
+<!-- Animated Background -->
+<div class="bg-animated"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Notifications -->
+<div class="notif-container" id="notifContainer"></div>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">TX9</div>
+      <div>
+        <div class="logo-text">TX9</div>
+        <span class="logo-sub">المنصة الشاملة</span>
+      </div>
+    </a>
+    <div class="header-actions">
+      <div class="admin-badge" id="adminBadge" onclick="openAdminPanel()">
+        <i class="fas fa-shield-halved"></i> لوحة التحكم
+      </div>
+    </div>
+  </div>
+  <div class="glow-line"></div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="container">
+  <section class="hero">
+    <div class="hero-tag"><i class="fas fa-star"></i> المنصة الأولى من نوعها</div>
+    <h1 class="hero-title">مرحباً في <span>TX9</span></h1>
+    <p class="hero-desc">منصة شاملة للأخبار، السكربتات، الفيديوهات والتعديلات. كل ما تحتاجه في مكان واحد.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-label">إجمالي المحتوى</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statVideos">0</div>
+        <div class="stat-label">فيديو</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statPosts">0</div>
+        <div class="stat-label">بوست</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════ TABS ═══════════════ -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('news',this)">
+      <i class="fas fa-newspaper"></i> الأخبار
+    </button>
+    <button class="tab-btn" onclick="switchTab('scripts',this)">
+      <i class="fas fa-code"></i> السكربتات
+    </button>
+    <button class="tab-btn" onclick="switchTab('videos',this)">
+      <i class="fas fa-video"></i> الفيديوهات
+    </button>
+    <button class="tab-btn" onclick="switchTab('mods',this)">
+      <i class="fas fa-puzzle-piece"></i> التعديلات
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ SECTIONS ═══════════════ -->
+<div class="container">
+
+  <!-- SECTION: NEWS -->
+  <section class="tab-section active" id="sec-news">
+    <div class="section-header">
+      <div class="section-title"><i class="fas fa-newspaper"></i> الأخبار</div>
+    </div>
+    <div class="posts-grid" id="grid-news"></div>
+  </section>
+
+  <!-- SECTION: SCRIPTS -->
+  <section class="tab-section" id="sec-scripts">
+    <div class="section-header">
+      <div class="section-title"><i class="fas fa-code"></i> السكربتات</div>
+    </div>
+    <div class="posts-grid" id="grid-scripts"></div>
+  </section>
+
+  <!-- SECTION: VIDEOS -->
+  <section class="tab-section" id="sec-videos">
+    <div class="section-header">
+      <div class="section-title"><i class="fas fa-video"></i> الفيديوهات</div>
+    </div>
+    <div class="videos-grid" id="grid-videos"></div>
+  </section>
+
+  <!-- SECTION: MODS -->
+  <section class="tab-section" id="sec-mods">
+    <div class="section-header">
+      <div class="section-title"><i class="fas fa-puzzle-piece"></i> التعديلات</div>
+    </div>
+    <div class="posts-grid" id="grid-mods"></div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <p>© 2025 <span>TX9</span> — جميع الحقوق محفوظة · صُنع بـ <i class="fas fa-heart" style="color:var(--danger)"></i></p>
+</footer>
+
+<!-- ═══════════════ PASSWORD MODAL ═══════════════ -->
+<div class="modal-overlay" id="passModal">
+  <div class="modal pass-modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-lock"></i> تسجيل دخول الأدمن</div>
+      <button class="modal-close" onclick="closeModal('passModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="pass-icon"><i class="fas fa-shield-halved"></i></div>
+      <div class="form-group">
+        <label class="form-label">كلمة المرور</label>
+        <input type="password" class="form-control" id="passInput" placeholder="أدخل كلمة المرور..." onkeydown="if(event.key==='Enter')checkPass()">
+        <div class="pass-hint">اضغط Enter أو زر التأكيد للدخول</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px" onclick="checkPass()">
+        <i class="fas fa-sign-in-alt"></i> دخول
+      </button>
+      <div id="passError" style="color:var(--danger);margin-top:10px;font-size:0.85rem;display:none;text-align:center">
+        <i class="fas fa-exclamation-circle"></i> كلمة المرور غير صحيحة
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN PANEL MODAL ═══════════════ -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal admin-panel-modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-shield-halved"></i> لوحة تحكم الأدمن</div>
+      <button class="modal-close" onclick="closeModal('adminModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-tabs">
+        <div class="admin-tab active" onclick="switchAdminTab('addPost',this)"><i class="fas fa-plus"></i> إضافة بوست</div>
+        <div class="admin-tab" onclick="switchAdminTab('uploadVideo',this)"><i class="fas fa-upload"></i> رفع فيديو</div>
+        <div class="admin-tab" onclick="switchAdminTab('webhook',this)"><i class="fab fa-discord"></i> ديسكورد</div>
+      </div>
+
+      <!-- Add Post -->
+      <div class="admin-section active" id="adminSec-addPost">
+        <div class="form-group">
+          <label class="form-label">القسم</label>
+          <select class="form-control" id="postSection">
+            <option value="news">الأخبار</option>
+            <option value="scripts">السكربتات</option>
+            <option value="videos">الفيديوهات</option>
+            <option value="mods">التعديلات</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">عنوان البوست</label>
+          <input type="text" class="form-control" id="postTitle" placeholder="عنوان البوست...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">المحتوى</label>
+          <textarea class="form-control" id="postContent" placeholder="اكتب محتوى البوست هنا..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">صورة / فيديو (اختياري)</label>
+          <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-secondary" onclick="toggleMediaMode('url')"><i class="fas fa-link"></i> رابط خارجي</button>
+            <button class="btn btn-sm btn-secondary" onclick="toggleMediaMode('upload')"><i class="fas fa-upload"></i> رفع ملف</button>
+          </div>
+          <div id="mediaUrlDiv" style="display:none">
+            <input type="text" class="form-control" id="postMediaUrl" placeholder="https://... (صورة أو رابط يوتيوب/فيديو)">
+          </div>
+          <div id="mediaUploadDiv" style="display:none">
+            <div class="file-upload-area" id="postFileArea" onclick="document.getElementById('postFileInput').click()" ondragover="dragOver(event,'postFileArea')" ondragleave="dragLeave(event,'postFileArea')" ondrop="dropFile(event,'postFileInput','postFileArea')">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <div id="postFileAreaText">اضغط أو اسحب صورة/فيديو هنا</div>
+            </div>
+            <input type="file" id="postFileInput" accept="image/*,video/*" onchange="handlePostFile(this)">
+            <div class="upload-progress" id="postUploadProgress">
+              <div class="upload-progress-bar" id="postUploadBar"></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="addPost()">
+          <i class="fas fa-plus-circle"></i> نشر البوست
+        </button>
+      </div>
+
+      <!-- Upload Video -->
+      <div class="admin-section" id="adminSec-uploadVideo">
+        <div class="form-group">
+          <label class="form-label">عنوان الفيديو</label>
+          <input type="text" class="form-control" id="videoTitle" placeholder="عنوان الفيديو...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">القسم (أين يظهر الفيديو)</label>
+          <select class="form-control" id="videoSection">
+            <option value="videos">قسم الفيديوهات</option>
+            <option value="news">الأخبار</option>
+            <option value="scripts">السكربتات</option>
+            <option value="mods">التعديلات</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملف الفيديو</label>
+          <div class="file-upload-area" id="videoFileArea" onclick="document.getElementById('videoFileInput').click()" ondragover="dragOver(event,'videoFileArea')" ondragleave="dragLeave(event,'videoFileArea')" ondrop="dropFile(event,'videoFileInput','videoFileArea')">
+            <i class="fas fa-film"></i>
+            <div id="videoFileAreaText">اسحب الفيديو هنا أو اضغط للاختيار</div>
+            <div style="font-size:0.75rem;margin-top:6px;opacity:0.5">MP4, WebM, AVI, MOV مدعوم</div>
+          </div>
+          <input type="file" id="videoFileInput" accept="video/*" onchange="handleVideoFile(this)">
+          <div class="upload-progress" id="videoUploadProgress" style="margin-top:10px">
+            <div class="upload-progress-bar" id="videoUploadBar"></div>
+          </div>
+          <div id="videoSizeInfo" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px"></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveVideo()">
+          <i class="fas fa-save"></i> حفظ الفيديو
+        </button>
+        <div id="videoSaveMsg" style="margin-top:12px;font-size:0.85rem;color:var(--success);display:none;text-align:center"></div>
+      </div>
+
+      <!-- Webhook -->
+      <div class="admin-section" id="adminSec-webhook">
+        <div style="background:rgba(88,101,242,0.1);border:1px solid rgba(88,101,242,0.3);border-radius:12px;padding:16px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:10px;color:#7289da;font-weight:700;margin-bottom:8px">
+            <i class="fab fa-discord fa-lg"></i> إشعارات ديسكورد
+          </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">
+            أضف رابط Webhook من خادم ديسكورد الخاص بك لاستلام إشعارات فورية عند نشر بوستات جديدة.
+          </p>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><i class="fab fa-discord"></i> رابط Webhook</label>
+          <input type="text" class="form-control" id="webhookInput" placeholder="https://discord.com/api/webhooks/...">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="saveWebhook()"><i class="fas fa-save"></i> حفظ الرابط</button>
+          <button class="btn btn-secondary" onclick="testWebhook()"><i class="fas fa-paper-plane"></i> اختبار الإرسال</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const PASSWORD = '@s44fds0';
+let isAdmin = false;
+let keyBuffer = '';
+let pendingPostFile = null; // {type:'image'|'video', blobKey:string}
+let pendingVideoFile = null; // {blobKey, name, size}
+let currentMediaMode = null;
+
+// ─────────────────────────────────────────────
+// INDEXEDDB SETUP
+// ─────────────────────────────────────────────
+let db;
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('TX9DB', 2);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('blobs')) d.createObjectStore('blobs');
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(db); };
+    req.onerror = e => reject(e);
+  });
+}
+
+function saveBlob(key, blob) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('blobs', 'readwrite');
+    tx.objectStore('blobs').put(blob, key);
+    tx.oncomplete = () => resolve(key);
+    tx.onerror = e => reject(e);
+  });
+}
+
+function getBlob(key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('blobs', 'readonly');
+    const req = tx.objectStore('blobs').get(key);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = e => reject(e);
+  });
+}
+
+function deleteBlob(key) {
+  return new Promise((resolve) => {
+    const tx = db.transaction('blobs', 'readwrite');
+    tx.objectStore('blobs').delete(key);
+    tx.oncomplete = resolve;
+  });
+}
+
+// ─────────────────────────────────────────────
+// POSTS STORAGE (localStorage)
+// ─────────────────────────────────────────────
+function getPosts() {
+  try { return JSON.parse(localStorage.getItem('tx9_posts') || '[]'); } catch { return []; }
+}
+function savePosts(posts) {
+  localStorage.setItem('tx9_posts', JSON.stringify(posts));
+}
+function getWebhook() { return localStorage.getItem('tx9_webhook') || ''; }
+function saveWebhookLS(url) { localStorage.setItem('tx9_webhook', url); }
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// MODALS
+// ─────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+window.onclick = e => {
+  ['passModal','adminModal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (e.target === el) closeModal(id);
+  });
+};
+
+// ─────────────────────────────────────────────
+// KEY LISTENER (L then K)
+// ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  keyBuffer += e.key.toUpperCase();
+  if (keyBuffer.length > 3) keyBuffer = keyBuffer.slice(-3);
+  if (keyBuffer.includes('LK')) {
+    keyBuffer = '';
+    if (!isAdmin) openModal('passModal');
+    else openAdminPanel();
+  }
+});
+
+// ─────────────────────────────────────────────
+// AUTH
+// ─────────────────────────────────────────────
+function checkPass() {
+  const val = document.getElementById('passInput').value;
+  if (val === PASSWORD) {
+    isAdmin = true;
+    closeModal('passModal');
+    document.getElementById('passInput').value = '';
+    document.getElementById('passError').style.display = 'none';
+    document.getElementById('adminBadge').classList.add('show');
+    document.getElementById('bodyRoot').classList.add('admin-logged');
+    showNotif('تم تسجيل الدخول بنجاح!', 'success');
+    openAdminPanel();
+  } else {
+    document.getElementById('passError').style.display = 'block';
+    document.getElementById('passInput').value = '';
+    document.getElementById('passInput').focus();
+  }
+}
+
+// ─────────────────────────────────────────────
+// ADMIN PANEL
+// ─────────────────────────────────────────────
+function openAdminPanel() {
+  if (!isAdmin) return;
+  const wh = getWebhook();
+  if (wh) document.getElementById('webhookInput').value = wh;
+  openModal('adminModal');
+}
+
+function switchAdminTab(id, el) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('adminSec-' + id).classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// MEDIA MODE TOGGLE
+// ─────────────────────────────────────────────
+function toggleMediaMode(mode) {
+  currentMediaMode = mode;
+  document.getElementById('mediaUrlDiv').style.display = mode === 'url' ? 'block' : 'none';
+  document.getElementById('mediaUploadDiv').style.display = mode === 'upload' ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────
+// FILE DRAG & DROP HELPERS
+// ─────────────────────────────────────────────
+function dragOver(e, areaId) {
+  e.preventDefault();
+  document.getElementById(areaId).classList.add('dragover');
+}
+function dragLeave(e, areaId) {
+  document.getElementById(areaId).classList.remove('dragover');
+}
+function dropFile(e, inputId, areaId) {
+  e.preventDefault();
+  dragLeave(e, areaId);
+  const files = e.dataTransfer.files;
+  if (!files.length) return;
+  const input = document.getElementById(inputId);
+  // Assign file to input via DataTransfer
+  const dt = new DataTransfer();
+  dt.items.add(files[0]);
+  input.files = dt.files;
+  input.dispatchEvent(new Event('change'));
+}
+
+// ─────────────────────────────────────────────
+// POST FILE HANDLING (image or video inside a post)
+// ─────────────────────────────────────────────
+function handlePostFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const area = document.getElementById('postFileArea');
+  area.classList.remove('dragover');
+  document.getElementById('postFileAreaText').textContent = 'جاري الرفع: ' + file.name;
+
+  // Show progress
+  const prog = document.getElementById('postUploadProgress');
+  const bar = document.getElementById('postUploadBar');
+  prog.style.display = 'block';
+  bar.style.width = '0%';
+
+  const key = 'post_media_' + Date.now();
+  // Simulate progress then save
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct += 10;
+    bar.style.width = pct + '%';
+    if (pct >= 90) clearInterval(interval);
+  }, 50);
+
+  saveBlob(key, file).then(() => {
+    clearInterval(interval);
+    bar.style.width = '100%';
+    pendingPostFile = { type: file.type.startsWith('video') ? 'video' : 'image', blobKey: key, name: file.name };
+    document.getElementById('postFileAreaText').textContent = '✅ ' + file.name;
+    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; }, 1000);
+  }).catch(() => {
+    showNotif('فشل حفظ الملف، حاول مجدداً', 'error');
+  });
+}
+
+// ─────────────────────────────────────────────
+// VIDEO FILE HANDLING (standalone video)
+// ─────────────────────────────────────────────
+function handleVideoFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const mb = (file.size / 1024 / 1024).toFixed(1);
+  document.getElementById('videoSizeInfo').textContent = `📦 حجم الملف: ${mb} MB`;
+  document.getElementById('videoFileAreaText').textContent = file.name;
+
+  const prog = document.getElementById('videoUploadProgress');
+  const bar = document.getElementById('videoUploadBar');
+  prog.style.display = 'block';
+  bar.style.width = '0';
+
+  const key = 'video_' + Date.now();
+  let pct = 0;
+  const iv = setInterval(() => {
+    pct += 5;
+    bar.style.width = Math.min(pct, 90) + '%';
+    if (pct >= 90) clearInterval(iv);
+  }, 60);
+
+  saveBlob(key, file).then(() => {
+    clearInterval(iv);
+    bar.style.width = '100%';
+    pendingVideoFile = { blobKey: key, name: file.name, size: mb + ' MB' };
+    document.getElementById('videoFileAreaText').textContent = '✅ جاهز للحفظ: ' + file.name;
+    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; }, 800);
+  }).catch(() => showNotif('فشل رفع الفيديو، حاول مجدداً', 'error'));
+}
+
+// ─────────────────────────────────────────────
+// SAVE STANDALONE VIDEO
+// ─────────────────────────────────────────────
+async function saveVideo() {
+  const title = document.getElementById('videoTitle').value.trim();
+  const section = document.getElementById('videoSection').value;
+  if (!title) { showNotif('أدخل عنوان الفيديو', 'error'); return; }
+  if (!pendingVideoFile) { showNotif('اختر ملف فيديو أولاً', 'error'); return; }
+
+  const posts = getPosts();
+  const post = {
+    id: Date.now(),
+    type: 'video',
+    section,
+    title,
+    content: '',
+    mediaType: 'video',
+    blobKey: pendingVideoFile.blobKey,
+    mediaSize: pendingVideoFile.size,
+    date: new Date().toLocaleDateString('ar-EG')
+  };
+  posts.unshift(post);
+  savePosts(posts);
+  renderAll();
+  updateStats();
+
+  document.getElementById('videoSaveMsg').style.display = 'block';
+  document.getElementById('videoSaveMsg').textContent = '✅ تم حفظ الفيديو بنجاح!';
+  document.getElementById('videoTitle').value = '';
+  pendingVideoFile = null;
+  document.getElementById('videoFileAreaText').textContent = 'اسحب الفيديو هنا أو اضغط للاختيار';
+  setTimeout(() => { document.getElementById('videoSaveMsg').style.display = 'none'; }, 3000);
+
+  await sendDiscordNotif({ section, title, content: 'فيديو جديد', type: 'video' });
+  showNotif('تم نشر الفيديو!', 'success');
+}
+
+// ─────────────────────────────────────────────
+// ADD POST
+// ─────────────────────────────────────────────
+async function addPost() {
+  const section = document.getElementById('postSection').value;
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  if (!title) { showNotif('أدخل عنوان البوست', 'error'); return; }
+
+  const post = {
+    id: Date.now(),
+    section,
+    title,
+    content,
+    date: new Date().toLocaleDateString('ar-EG'),
+    type: 'post'
+  };
+
+  // Handle media
+  if (currentMediaMode === 'url') {
+    const url = document.getElementById('postMediaUrl').value.trim();
+    if (url) {
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        post.mediaType = 'youtube';
+        post.mediaUrl = url;
+      } else if (url.match(/\.(mp4|webm|ogg|mov)/i)) {
+        post.mediaType = 'video';
+        post.mediaUrl = url;
+      } else {
+        post.mediaType = 'image';
+        post.mediaUrl = url;
+      }
+    }
+  } else if (currentMediaMode === 'upload' && pendingPostFile) {
+    post.mediaType = pendingPostFile.type;
+    post.blobKey = pendingPostFile.blobKey;
+  }
+
+  const posts = getPosts();
+  posts.unshift(post);
+  savePosts(posts);
+  renderAll();
+  updateStats();
+
+  // Reset form
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('postMediaUrl').value = '';
+  pendingPostFile = null;
+  currentMediaMode = null;
+  document.getElementById('mediaUrlDiv').style.display = 'none';
+  document.getElementById('mediaUploadDiv').style.display = 'none';
+  document.getElementById('postFileAreaText').textContent = 'اضغط أو اسحب صورة/فيديو هنا';
+
+  await sendDiscordNotif({ section, title, content, type: post.type });
+  showNotif('تم نشر البوست بنجاح!', 'success');
+  closeModal('adminModal');
+}
+
+// ─────────────────────────────────────────────
+// DELETE POST
+// ─────────────────────────────────────────────
+function deletePost(id) {
+  if (!isAdmin) return;
+  if (!confirm('هل تريد حذف هذا البوست؟')) return;
+  const posts = getPosts().filter(p => p.id !== id);
+  savePosts(posts);
+  renderAll();
+  updateStats();
+  showNotif('تم الحذف', 'info');
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+const sectionLabels = { news:'الأخبار', scripts:'السكربتات', videos:'الفيديوهات', mods:'التعديلات' };
+const sectionBadgeClass = { news:'badge-news', scripts:'badge-scripts', videos:'badge-videos', mods:'badge-mods' };
+const sectionIcons = { news:'fa-newspaper', scripts:'fa-code', videos:'fa-video', mods:'fa-puzzle-piece' };
+
+async function renderAll() {
+  const posts = getPosts();
+  const sections = ['news','scripts','videos','mods'];
+
+  for (const sec of sections) {
+    const secPosts = posts.filter(p => p.section === sec);
+    if (sec === 'videos') {
+      await renderVideos(secPosts);
+    } else {
+      await renderSection(sec, secPosts);
+    }
+  }
+}
+
+async function renderSection(sec, posts) {
+  const grid = document.getElementById('grid-' + sec);
+  if (!posts.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas ${sectionIcons[sec]}"></i><p>لا يوجد محتوى في هذا القسم بعد</p></div>`;
+    return;
+  }
+  const cards = await Promise.all(posts.map(p => buildPostCard(p)));
+  grid.innerHTML = cards.join('');
+}
+
+async function renderVideos(posts) {
+  const grid = document.getElementById('grid-videos');
+  if (!posts.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-video"></i><p>لا توجد فيديوهات بعد. ارفع فيديو من لوحة التحكم.</p></div>`;
+    return;
+  }
+  const cards = await Promise.all(posts.map(p => buildVideoCard(p)));
+  grid.innerHTML = cards.join('');
+  // Attach blob sources
+  for (const p of posts) {
+    if (p.blobKey) {
+      const blob = await getBlob(p.blobKey);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const vEl = document.getElementById('vid_' + p.id);
+        if (vEl) vEl.src = url;
+      }
+    }
+  }
+}
+
+async function buildPostCard(post) {
+  let mediaSrc = '';
+  if (post.blobKey) {
+    // Will be injected after render
+    mediaSrc = '__BLOB__';
+  } else if (post.mediaUrl) {
+    mediaSrc = post.mediaUrl;
+  }
+
+  let mediaHtml = '';
+  if (post.mediaType === 'image' && mediaSrc) {
+    if (mediaSrc === '__BLOB__') {
+      mediaHtml = `<div class="post-media"><img id="img_${post.id}" src="" alt="" loading="lazy"><span class="post-type-badge ${sectionBadgeClass[post.section]}">${sectionLabels[post.section]}</span></div>`;
+    } else {
+      mediaHtml = `<div class="post-media"><img src="${mediaSrc}" alt="" loading="lazy" onerror="this.style.display='none'"><span class="post-type-badge ${sectionBadgeClass[post.section]}">${sectionLabels[post.section]}</span></div>`;
+    }
+  } else if (post.mediaType === 'video') {
+    if (mediaSrc === '__BLOB__') {
+      mediaHtml = `<div class="post-media"><video id="vid_${post.id}" controls preload="metadata" style="width:100%;max-height:250px;background:#000"></video><span class="post-type-badge ${sectionBadgeClass[post.section]}">${sectionLabels[post.section]}</span></div>`;
+    } else {
+      mediaHtml = `<div class="post-media"><video src="${mediaSrc}" controls preload="metadata" style="width:100%;max-height:250px;background:#000"></video><span class="post-type-badge ${sectionBadgeClass[post.section]}">${sectionLabels[post.section]}</span></div>`;
+    }
+  } else if (post.mediaType === 'youtube' && mediaSrc) {
+    const ytId = extractYTId(mediaSrc);
+    mediaHtml = `<div class="post-media"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen style="width:100%;height:200px;border:none"></iframe><span class="post-type-badge ${sectionBadgeClass[post.section]}">${sectionLabels[post.section]}</span></div>`;
+  } else {
+    mediaHtml = `<div class="post-media" style="display:none"></div>`;
+  }
+
+  const deleteBtn = `<button class="btn-delete" onclick="deletePost(${post.id})"><i class="fas fa-trash"></i> حذف</button>`;
+
+  return `
+  <div class="post-card" id="card_${post.id}">
+    ${mediaHtml}
+    <div class="post-body">
+      <div class="post-title">${escHtml(post.title)}</div>
+      ${post.content ? `<div class="post-content">${escHtml(post.content)}</div>` : ''}
+      <div class="post-footer">
+        <div class="post-date"><i class="fas fa-calendar-alt"></i> ${post.date}</div>
+        ${deleteBtn}
+      </div>
+    </div>
+  </div>`;
+}
+
+async function buildVideoCard(post) {
+  const deleteBtn = `<button class="btn-delete" style="display:none" onclick="deletePost(${post.id})"><i class="fas fa-trash"></i></button>`;
+  return `
+  <div class="video-card" id="card_${post.id}">
+    <video id="vid_${post.id}" controls preload="metadata" src="${post.mediaUrl || ''}"></video>
+    <div class="post-body">
+      <div class="video-title">${escHtml(post.title)}</div>
+      <div class="video-actions">
+        <div class="video-meta"><i class="fas fa-calendar-alt"></i>${post.date} ${post.mediaSize ? '· '+post.mediaSize : ''}</div>
+        ${deleteBtn}
+      </div>
+    </div>
+  </div>`;
+}
+
+// Inject blobs after render
+async function injectBlobs() {
+  const posts = getPosts();
+  for (const p of posts) {
+    if (!p.blobKey) continue;
+    const blob = await getBlob(p.blobKey);
+    if (!blob) continue;
+    const url = URL.createObjectURL(blob);
+    const imgEl = document.getElementById('img_' + p.id);
+    const vidEl = document.getElementById('vid_' + p.id);
+    if (imgEl) imgEl.src = url;
+    if (vidEl) vidEl.src = url;
+  }
+}
+
+// ─────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────
+function updateStats() {
+  const posts = getPosts();
+  const videos = posts.filter(p => p.type === 'video' || p.mediaType === 'video');
+  document.getElementById('statTotal').textContent = posts.length;
+  document.getElementById('statVideos').textContent = videos.length;
+  document.getElementById('statPosts').textContent = posts.filter(p => p.type !== 'video').length;
+}
+
+// ─────────────────────────────────────────────
+// DISCORD WEBHOOK
+// ─────────────────────────────────────────────
+function saveWebhook() {
+  const url = document.getElementById('webhookInput').value.trim();
+  saveWebhookLS(url);
+  showNotif('تم حفظ رابط Webhook!', 'success');
+}
+
+async function testWebhook() {
+  await sendDiscordNotif({ section: 'اختبار', title: 'اختبار Webhook', content: 'هذا اختبار من منصة TX9 ✅', type: 'test' });
+}
+
+async function sendDiscordNotif({ section, title, content, type }) {
+  const webhook = getWebhook();
+  if (!webhook) return;
+  const sectionAr = sectionLabels[section] || section;
+  const payload = {
+    username: 'TX9 منصة',
+    avatar_url: 'https://i.imgur.com/AfFp7pu.png',
+    embeds: [{
+      title: '📢 ' + title,
+      description: content ? content.substring(0, 200) : 'محتوى جديد',
+      color: 0x00d4ff,
+      fields: [
+        { name: '📁 القسم', value: sectionAr, inline: true },
+        { name: '🏷️ النوع', value: type === 'video' ? '🎬 فيديو' : '📝 بوست', inline: true }
+      ],
+      footer: { text: 'TX9 - المنصة الشاملة' },
+      timestamp: new Date().toISOString()
+    }]
+  };
+  try {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok || res.status === 204) showNotif('تم إرسال إشعار ديسكورد ✅', 'success');
+    else showNotif('فشل إرسال إشعار ديسكورد', 'error');
+  } catch(e) {
+    showNotif('خطأ في إرسال Webhook', 'error');
+  }
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+function showNotif(msg, type='info') {
+  const container = document.getElementById('notifContainer');
+  const div = document.createElement('div');
+  div.className = `notif notif-${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-times-circle', info:'fa-info-circle' };
+  div.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
+  container.appendChild(div);
+  setTimeout(() => div.remove(), 3200);
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function extractYTId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/);
+  return m ? m[1] : '';
+}
+function escHtml(s) {
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+async function init() {
+  await initDB();
+  await renderAll();
+  await injectBlobs();
+  updateStats();
+}
+init();
+</script>
+</body>
+</html>
